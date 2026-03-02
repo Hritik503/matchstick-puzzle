@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Matchstick 7-Segment Puzzle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    #solve-spinner {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      padding: 28px 0 10px;
+    }
+    .spinner-ring {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(74,127,165,0.2);
+      border-top-color: #4a7fa5;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .spinner-label {
+      font-size: 13px;
+      color: #a0b4cc;
+      letter-spacing: 0.04em;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER: title left, credit right, same baseline -->
+  <header class="header-bar">
+    <div class="header-main">
+      <h1>Matchstick 7-Segment Puzzle</h1>
+      <p class="subtitle">
+        Move segments to get the largest/smallest valid number. Segments freeze after you move them.
+      </p>
+    </div>
+    <div class="header-right-credit">
+      Created by: Hritik &middot; <a href="#" target="_blank">GitHub</a>
+    </div>
+  </header>
+
+  <main class="main-layout">
+
+    <!-- LEFT: controls + results -->
+    <section class="left-column">
+
+      <section class="card" id="input-card">
+        <h2>Input</h2>
+        <div class="input-grid">
+          <div class="field">
+            <label for="inputNum">Starting number (max 6 digits)</label>
+            <input id="inputNum" type="text" placeholder="e.g. 49, 508, 1436..." maxlength="6" />
+          </div>
+          <div class="field">
+            <label for="maxMoves">Max moves (1&ndash;6)</label>
+            <select id="maxMoves">
+              <option value="">Choose</option>
+              <option value="1">1 move</option>
+              <option value="2">2 moves</option>
+              <option value="3">3 moves</option>
+              <option value="4">4 moves</option>
+              <option value="5">5 moves</option>
+              <option value="6">6 moves</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="modeSelect">Goal</label>
+            <select id="modeSelect">
+              <option value="max">Largest number</option>
+              <option value="min">Smallest number</option>
+            </select>
+          </div>
+          <div class="field field-button">
+            <button id="solveBtn">Solve &#9658;</button>
+          </div>
+        </div>
+        <p id="error" class="error-msg"></p>
+        <p id="size-warning" class="warning-msg" style="display:none;"></p>
+      </section>
+
+      <section class="card" id="original-box" style="display:none;">
+        <h2>Original</h2>
+        <p class="section-title">Starting digits</p>
+        <div id="orig-display" class="digits-row"></div>
+      </section>
+
+      <section class="card" id="result-box" style="display:none;">
+        <h2>Best result</h2>
+        <div id="solve-spinner">
+          <div class="spinner-ring"></div>
+          <span class="spinner-label">Computing best result&hellip;</span>
+        </div>
+        <p id="result-text" class="result-number"></p>
+        <p class="section-title">Result digits</p>
+        <div id="result-display" class="digits-row"></div>
+        <hr />
+        <p class="section-title">Move sequence</p>
+        <div id="move-log" class="moves-log"></div>
+      </section>
+
+    </section>
+
+    <!-- RIGHT: help + diagram -->
+    <aside class="right-column">
+      <section class="card help-card">
+        <h2>How moves work</h2>
+        <p class="help-text">
+          Each move lets you pick <strong>one lit segment</strong> from any digit
+          and place it into any <strong>empty segment slot</strong> of any digit.
+          Intermediate shapes can be broken &mdash; only the <strong>final result</strong>
+          must form valid digits.
+        </p>
+        <p class="help-text">
+          The left-most digit is always <strong>pos0</strong>, then pos1, pos2&hellip;
+          Up to 2 extra blank positions can be built into new digits within the move limit.
+        </p>
+
+        <p class="section-title" style="margin:16px 0 10px;">Segment labels (a &ndash; g)</p>
+
+        <div class="seg-diagram-container">
+          <div class="seg-legend">
+            <div class="seg-legend-item"><span class="seg-badge">a</span><span>Top horizontal</span></div>
+            <div class="seg-legend-item"><span class="seg-badge">b</span><span>Top-right vertical</span></div>
+            <div class="seg-legend-item"><span class="seg-badge">c</span><span>Bottom-right vertical</span></div>
+            <div class="seg-legend-item"><span class="seg-badge">d</span><span>Bottom horizontal</span></div>
+            <div class="seg-legend-item"><span class="seg-badge">e</span><span>Bottom-left vertical</span></div>
+            <div class="seg-legend-item"><span class="seg-badge">f</span><span>Top-left vertical</span></div>
+            <div class="seg-legend-item"><span class="seg-badge">g</span><span>Middle horizontal</span></div>
+          </div>
+          <div class="seg-diagram-svg-wrap">
+            <svg viewBox="-14 0 148 182" xmlns="http://www.w3.org/2000/svg" class="seg-diagram-svg">
+              <text x="60" y="10" text-anchor="middle" font-size="11" fill="#a0b4cc" font-weight="bold">a</text>
+              <rect x="14" y="14" width="92" height="13" rx="3" fill="#4a7fa5"/>
+              <text x="-6" y="57" text-anchor="middle" font-size="11" fill="#a0b4cc" font-weight="bold">f</text>
+              <rect x="0"  y="31" width="12" height="44" rx="3" fill="#4a7fa5"/>
+              <text x="126" y="57" text-anchor="middle" font-size="11" fill="#a0b4cc" font-weight="bold">b</text>
+              <rect x="108" y="31" width="12" height="44" rx="3" fill="#4a7fa5"/>
+              <rect x="14" y="79" width="92" height="13" rx="3" fill="#4a7fa5"/>
+              <text x="60" y="104" text-anchor="middle" font-size="11" fill="#a0b4cc" font-weight="bold">g</text>
+              <text x="-6" y="124" text-anchor="middle" font-size="11" fill="#a0b4cc" font-weight="bold">e</text>
+              <rect x="0"  y="96"  width="12" height="44" rx="3" fill="#4a7fa5"/>
+              <text x="126" y="124" text-anchor="middle" font-size="11" fill="#a0b4cc" font-weight="bold">c</text>
+              <rect x="108" y="96"  width="12" height="44" rx="3" fill="#4a7fa5"/>
+              <rect x="14" y="144" width="92" height="13" rx="3" fill="#4a7fa5"/>
+              <text x="60" y="170" text-anchor="middle" font-size="11" fill="#a0b4cc" font-weight="bold">d</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="example-box">
+          <p><strong>Example:</strong> 45 &rarr; 97 in 3 moves</p>
+          <p>Move 1: pos1(<strong>g</strong>) &rarr; pos0(<strong>a</strong>)</p>
+          <p>Move 2: pos1(<strong>d</strong>) &rarr; pos0(<strong>d</strong>)</p>
+          <p>Move 3: pos1(<strong>f</strong>) &rarr; pos1(<strong>b</strong>)</p>
+        </div>
+
+        <p class="help-text" style="margin-top:10px;">
+          Starting number limited to 6 digits, move count to 6.
+        </p>
+      </section>
+    </aside>
+
+  </main>
+
+  <script src="segment-hints.js"></script>
+  <script src="segment-solver-hints.js"></script>
+  <script src="logic.js"></script>
+
+</body>
+</html>

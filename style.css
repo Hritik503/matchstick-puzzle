@@ -1,0 +1,162 @@
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{background:#e5edf5;color:#1f2933;line-height:1.5;padding:24px}
+.app-header{max-width:1200px;margin:0 auto 24px auto}
+.app-title-row{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.app-icon{font-weight:600;font-size:12px;letter-spacing:.18em;color:#7a8699;text-transform:uppercase}
+.app-header h1{font-size:24px;font-weight:600;color:#111827}
+.subtitle{font-size:14px;color:#4b5563;margin-top:4px}
+
+/* main layout */
+.main-layout{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2.1fr 1.3fr;gap:20px}
+@media(max-width:900px){.main-layout{grid-template-columns:1fr}}
+
+/* cards */
+.card{background:linear-gradient(135deg,#f9fafb 0%,#dde7f5 45%,#c6d6f0 100%);border:1px solid rgba(107,114,128,.45);border-radius:12px;padding:18px 20px 20px 20px;box-shadow:0 14px 30px rgba(15,23,42,.12)}
+.card h2{font-size:16px;font-weight:600;margin-bottom:10px;color:#0f172a}
+.left-column,.right-column{display:flex;flex-direction:column;gap:16px}
+
+/* make right help card taller */
+.help-card{min-height:520px}
+
+/* input row: 3 fields + button in one line */
+.input-grid{
+  display:grid;
+  grid-template-columns:1.5fr 1fr 1.1fr 0.8fr; /* num, moves, goal, button */
+  gap:12px 16px;
+  margin-top:8px;
+}
+
+.field label{font-size:13px;color:#374151;margin-bottom:4px;display:block}
+
+/* inputs + selects: same height */
+.field input,
+.field select{
+  width:100%;
+  font-size:14px;
+  padding:10px 10px;
+  border-radius:6px;
+  border:1px solid #cbd5e1;
+  background:#f9fafb;
+  color:#111827;
+  line-height:1.2;
+}
+
+.field-button{display:flex;align-items:flex-end}
+
+/* Solve button: same height as fields */
+button#solveBtn{
+  width:100%;
+  padding:10px 10px;
+  border-radius:6px;
+  border:1px solid #020617;
+  background:linear-gradient(135deg,#020617,#111827);
+  color:#f9fafb;
+  font-size:14px;
+  font-weight:500;
+  cursor:pointer;
+  transition:background .16s ease,border-color .16s ease,transform .06s ease,box-shadow .12s ease;
+}
+
+button#solveBtn:hover{background:linear-gradient(135deg,#020617,#020617);border-color:#020617;box-shadow:0 4px 12px rgba(15,23,42,.35)}
+button#solveBtn:active{transform:scale(.98);box-shadow:none}
+
+.error-msg{margin-top:8px;font-size:13px;color:#b91c1c}
+.warning-msg{margin-top:4px;font-size:12px;color:#92400e}
+.section-title{margin:8px 0 6px 0;font-size:12px;font-weight:600;color:#4b5563;text-transform:uppercase;letter-spacing:.08em}
+
+/* digits */
+.digits-row{display:flex;gap:10px;margin-top:4px}
+.digit-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.digit-label{font-size:11px;color:#6b7280}
+.digit-svg{width:44px;height:52px}
+
+/* segments: lit vs unlit */
+.seg{fill:#cbd5e1}           /* base stroke */
+.seg.on{fill:#111827}        /* lit segments (black) */
+.seg.off{fill:#dde0e7;opacity:1}  /* unlit segments, clearly visible but subtle */
+
+.result-number{font-size:20px;font-weight:600;margin-bottom:4px;color:#111827}
+.moves-log{font-size:13px;color:#374151;margin-top:4px}
+
+/* help card text bigger */
+.help-card .help-text{font-size:15px;color:#4b5563;margin-bottom:10px}
+
+/* legend text bigger */
+.seg-diagram-container{display:flex;gap:16px;margin-top:8px}
+.seg-legend{display:flex;flex-direction:column;gap:6px;font-size:14px;color:#4b5563}
+.seg-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:999px;border:1px solid #cbd5e1;font-size:12px;margin-right:6px;background:#edf2ff;color:#111827}
+.seg-legend-item{display:flex;align-items:center}
+.seg-diagram-svg{width:120px;height:auto}
+
+.example-box{margin-top:10px;padding:10px 12px;border-radius:8px;border:1px solid rgba(148,163,184,.7);background:linear-gradient(135deg,#f9fafb 0%,#e3edff 100%);font-size:13px;color:#374151}
+
+#solve-spinner{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  padding:14px 0 6px 0;
+}
+
+.spinner-ring{
+  width:30px;
+  height:30px;
+  border:3px solid rgba(15,23,42,.18);   /* darker outer ring */
+  border-top-color:#111827;              /* solid dark top */
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+
+.spinner-label{
+  font-size:13px;
+  color:#111827;                         /* darker text */
+  font-weight:500;
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.seg-note{margin-top:10px;padding:8px 10px;border-radius:6px;border:1px solid rgba(148,163,184,.7);background:linear-gradient(135deg,#f9fafb 0%,#e3edff 100%);font-size:12px;color:#4b5563}
+.seg-note strong{color:#111827}
+
+/* dropdown list styling (non-blue highlight where supported) */
+select{appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%236b7280' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;background-size:10px 6px}
+select option{background:#f9fafb;color:#111827}
+select option:checked{background:#111827;color:#f9fafb}
+select option:hover{background:#f97316;color:#111827}
+
+/* header: title left, credit right, same line */
+.header-bar{
+  max-width:1200px;
+  margin:0 auto 25px auto;
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:16px;
+}
+.header-main{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.header-bar h1{
+  font-size:24px;
+  font-weight:600;
+  color:#111827;
+  margin:0;
+}
+.header-right-credit{
+  font-size:20px;
+  color:#4b5563;
+  white-space:nowrap;
+}
+.header-right-credit a{
+  color:#111827;
+  font-weight:500;
+  text-decoration:none;
+}
+.header-right-credit a:hover{
+  text-decoration:underline;
+}
+
+
+
